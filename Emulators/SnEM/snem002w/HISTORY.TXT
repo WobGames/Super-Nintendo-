@@ -1,0 +1,116 @@
+2/08/02 - Started work.
+           This is my 6th (!) attempt at a SNES emulator, the last one got
+           some games starting but was _VERY_ slow. With this one I'm using
+           a different method of opcode fetching and executing that should be
+           faster.
+03/08/02 - Enough opcodes implemented to run sonic.smc now. Video emulation
+           added and optimized, one layer of mode 1. Currently running at 3x
+           SNES speed on 350mhz (somewhat faster than my previous attempts).
+           Update (at 12:15) -
+           More opcodes, meaning more demos run. Second layer of mode 1 added
+           (using uber-fast masking technique), now about 2.5x SNES speed.
+04/08/02 - Modes 0+7 (no rotozoom though) added. More opcodes as well -
+           Sneswish starts, and First Drop runs. Nesquik's scroller is broken
+           though, and ATX Xmas demo looks buggered - the muzak code is
+           accessed through a JSR, and it rewrites all of RAM and the stack
+           pointer, then RTSes. I don't see how this is supposed to work...
+05/08/02 - Fixed a big bug in op B1 (LDA (),y) - Nesquik scroller works now
+           (along with most of the demo). Fixed scrolling direction - before
+           Nesquik it was impossible to tell if it was in the right direction
+           or not.
+           Listened to Relax by Frankie Goes To Hollywood today for a laugh,
+           it's a dreadful tune.
+06/08/02 - Fixed stack access, RTS Pac-man now works. Added BG3 in mode 1, but
+           it's slightly bugged. Sprites added (early - 16x16 only), Pac-man
+           playable!
+07/08/02 - More opcodes. Got KSFH to go through main menu and to intro, but is
+           bugged - the rats walk round for ever and krusty never comes on
+           stage...
+08/08/02 - Yet more opcodes. FF2 displays title now (but hangs there).
+12/08/02 - Fixed ATX Xmas problem - I never knew that some addressing modes
+           can access the next bank - I thought they all wrapped.
+20/08/02 - Started work on SPC700 (for no reason...)
+23/08/02 - SPC700 now works with some demos (no DSP emulation yet though),
+           however it hangs KSFH for some reason. I need an SPC disassembler...
+24/08/02 - Fixed FF2 problem - pad 2,3 and 4 registers can't return $FF (as I
+           have been making unimplemented registers do), otherwise the game
+           thinks all buttons are pressed...
+           (later on)
+           Added tons of opcodes for FF2, now it starts the intro, but sprites
+           are missing and it hangs after fading out from map...
+25/08/02 - Fixed a couple of 65816 bugs, ATX-DEM1.SMC starts. Palette now
+           emulated. Attempted to slow down using vsync, but this just makes
+           it drop 20fps, not drop to the refresh rate...
+	   (later on)
+	   Got Mario World to...start. The entire level data is missing from
+	   VRAM, so no collision detection works and everything bollockses up.
+26/08/02 - Attempted to track down Mario World bug, failed.
+           Added some BCD, Columns now kinda works.
+           FF2 now draws map during intro.
+           Revamped sprite support, KSFH intro looks okay now (Krusty stops at
+           the middle of the screen in mid step though :)
+           (later on - again)
+           KSFH is now playable! (just). Krusty has difficulty jumping very
+           high though, and the second sprite table isn't set up, so added a
+           hack to fix 16x16 sprites.
+
+28/08/02 - HDMA processing added.
+02/09/02 - Started mode 7 rotozoom, not correct yet
+04/09/02 - Added vline counter for Legend of the Mystical Ninja, still doesn't
+           work.
+05/09/02 - Added some more opcode to get Super Soccer up and running. Runs
+           demo mode fine (except for mode 7 bugs), but can't start game (skips
+           to demo instead).
+06/09/02 - Fixed stupid bug in INC abs, loads of games work better. Added the
+           BCD.
+07/09/02 - Fixed the BCD. Made ADC+SBC modular, for less inconsistencies.
+           Added a couple more SPC opcodes. Some debugging reveals that the
+           KSFH SPC lockup is a 65816 bug, not an SPC700 bug. Added toggles
+           for BGs.
+
+13/09/02 - Added more opcodes, mainly for Gradius 3 (playable!).
+14/09/02 - Fixed sprite size bug, was combination of bad drawing code and
+           incorrect docs. Added couple of opcodes for Super Off-road, still
+           unplayable though. Fixed CMP [],y - DWARF.SMC now works fine (about
+           fucking time).
+
+30/09/02 - TRAC/SNEeSe sent me some corrected SPC docs, might help the core.
+           Ran a few more games on the emu - dbz1e.smc is worth mentioning, as
+           the main guy on the intro spins round and round ad infinitum. Quite
+           amusing, but might also help with debugging. Addams Family is also
+           bugged, all the screen data (titles+levels) is squashed.
+01/12/02 - Wrote quick test program for ADC/SBC, SBC flags now fixed. 
+           Fixed matrix 16x8 multiply results, Super Off-road now OK.
+02/12/02 - Couple of 65816 fixes. Nothing major or significant.
+
+21/12/02 - Started rewrite of 65816 core.
+19/01/03 - Fixed bug in TYX, KSFH works again. Fixed up some PPU access,
+           Mario 1 + 2 in Mario Allstars work now. Sprites now smooth
+           horizontally (backgrounds still jerk though).
+29/01/03 - Fixed BG masking. Fixed sprite positioning. A couple more opcodes
+           added.
+08/02/03 - Fixed bug in BIT - TMNT4 works properly again. Fixed some stuff for
+           Humans. IRQs now on by default. Centred screen.
+09/02/03 - Fixed PAL/NTSC detection (hopefully)
+
+11/03/03 - Got some ADC/SBC fixes from TRAC. Added 64x64 mode. Mario World is
+	   now (kind-of) playable.
+12/03/03 - Got some more ADC/SBC fixes, plus a BIT fix, from TRAC.
+13/03/03 - Squashed some addressing mode bugs. Fixed 64x64 mode so it works.
+05/04/03 - Started work on new graphics engine.
+06/04/03 - Mode 1 now OK in new graphics engine. Full smooth scrolling +
+           sprites + priorites + HDMA (in theory).
+12/04/03 - Realised that mid-screen mode changes are impossible with current
+           engine, so started some rewriting.
+16/04/03 - All modes (hopefully) supported.
+21/04/03 - Improved mode 7 a bit.
+01/05/03 - Tracked down problem with some Ocean games (Addams Family, Robocod
+           and Pushover at least) - added 16x16 tile mode. Pushover now OK,
+           Addams Family buggered a bit though.
+           Interesting bit of info - setting every even byte of RAM to &20
+           makes Soccer Kid go into some kind of debug mode.
+           Added HDMA toggle. Soccer Kid totally fails to scroll with HDMA off.
+22/05/03 - Fixed addressing bug in JML[].
+24/05/03 - Fixed bug in DMA. Fixed bug in $2104.
+29/06/03 - Fixed slowdown bug in some games. Fixed Allstars a bit - bad initial
+           sprites. Also fixed 8 bitplane modes.
